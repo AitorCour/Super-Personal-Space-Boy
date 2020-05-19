@@ -26,7 +26,9 @@ public class PlayerBehaviour : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         attack = GetComponent<RaycastCircle>();
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
+        ui.Initialize();
         ui.UpdateHitCounter(attackNum);
+        character.skinWidth = 0;
     }
     void Update()
     {

@@ -7,7 +7,7 @@ public class UI_Manager : MonoBehaviour
 {
     private Text hitCounter;
     // Start is called before the first frame update
-    void Start()
+    public void Initialize()
     {
         hitCounter = GameObject.FindGameObjectWithTag("HitText").GetComponent<Text>();
     }

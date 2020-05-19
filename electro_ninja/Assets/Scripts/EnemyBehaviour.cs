@@ -12,8 +12,8 @@ public class EnemyBehaviour : MonoBehaviour
     public float speed;
     public float attackDistance;
     public float radius;
-    private float distance;
-    protected bool detected;
+    public float distance;
+    public bool detected;
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
     // Start is called before the first frame update
