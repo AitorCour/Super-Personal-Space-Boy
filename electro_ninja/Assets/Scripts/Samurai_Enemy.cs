@@ -9,13 +9,16 @@ public class Samurai_Enemy : EnemyBehaviour
     public float speedRot;
     private Vector3 destination;
     public bool destinationAchieved;
-    
+    private bool waiting;
+    private bool endWait;
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         agent.acceleration = acceleration;
-        destinationAchieved = true;
+        destinationAchieved = false;
+        waiting = false;
+        endWait = false;
     }
     void OnDrawGizmosSelected()
     {
@@ -31,55 +34,57 @@ public class Samurai_Enemy : EnemyBehaviour
 
         if (Physics.Raycast(transform.position, direction, out hit, radius, mask))
         {
-            //Debug.Log(hit.transform.name);
-            //Debug.DrawRay(transform.position, transform.forward * maxDistance, Color.red, 10.0f);
-            if (hit.collider != null && hit.collider.tag == "Player" && !detected && destinationAchieved)
+            if (hit.collider != null && hit.collider.tag == "Player" && !detected && !destinationAchieved)
             {
-                Debug.Log("Player detected");
-                destination = player.transform.position - new Vector3(2, 0, 0);
+                //Debug.Log("Player detected");
+                destination = player.transform.position /*- new Vector3(2, 0, 0)*/;
                 detected = true;
-            }
-            else if (hit.collider.tag != "Player")
-            {
-                Debug.Log("Player NOT detected");
-                //detected = false;
             }
         }
 
         distance = Vector3.Distance(destination, transform.position);
-        if (detected) //si lo detecta, va a por él
+        if (distance > attackDistance && detected) //si lo detecta, va a por él
         {
             agent.isStopped = false;
             agent.SetDestination(destination);
             destinationAchieved = false;
+            waiting = false;
+            endWait = false;
+            animator.SetBool("Running", true);
         }
-        else if(!detected) //si no lo detecta, se queda en el sitio rotando
-        {
-            //agent.SetDestination(destination);
-            Rotate();
-        }
-        if(distance + 3 <= attackDistance && detected) // si la distancia con el destino, es menos a la distancia de ataque, se para y rota
+        else if(distance <= attackDistance && detected) // si la distancia con el destino, es menos a la distancia de ataque, se para y rota
         {//if(player.x > transform.x = +3, else -3
-            Debug.Log("destination achieved");
+            //Debug.Log("destination achieved");
             destinationAchieved = true;
             detected = false;
+            animator.SetBool("Running", false);
+            //StartCoroutine(WaitRotate());
             //Poner un counter para la rotación
         }
-        else if (distance > attackDistance && detected)
+        else if(!detected && !waiting)
         {
-            Debug.Log("Chase Player");
+            Debug.Log("StartWait");
+            StartCoroutine(WaitRotate());
+            waiting = true;
+            endWait = false;
         }
-
-        if (agent.isStopped)
+        else if(!detected && waiting && endWait)
         {
-            Debug.Log("STOP");
+            Rotate();
         }
     }
     private void Rotate()
     {
+        Debug.Log("Rotating");
         agent.isStopped = true;
-
         float speedRot = Time.deltaTime * speed;
         transform.Rotate(Vector3.up * speedRot, Space.World);
+        destinationAchieved = false;
+    }
+    private IEnumerator WaitRotate()
+    {
+        yield return new WaitForSeconds(1);
+        endWait = true; 
+        Debug.Log("EndWait");
     }
 }

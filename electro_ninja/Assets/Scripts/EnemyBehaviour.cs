@@ -7,7 +7,7 @@ public class EnemyBehaviour : MonoBehaviour
 {
     protected NavMeshAgent agent;
     protected PlayerBehaviour player;
-    private Animator animator;
+    protected Animator animator;
     private CapsuleCollider capsuleCollider;
     public float speed;
     public float attackDistance;

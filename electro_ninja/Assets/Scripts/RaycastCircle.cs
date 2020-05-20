@@ -24,15 +24,20 @@ public class RaycastCircle : MonoBehaviour
         Debug.Log("Attackinggg");
         Vector3 origin = transform.position;
         Collider[] colliders = Physics.OverlapSphere(origin, rayDistance);
+
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
-            if(rb != null)
-            {
-                rb.AddExplosionForce(force, origin, rayDistance, upForce, ForceMode.Impulse);
-            }
-
             Collider col = hit.GetComponent<Collider>();
+
+            if (col.tag != "Player")
+            {
+                if (rb != null)
+                {
+                    rb.AddExplosionForce(force, origin, rayDistance, upForce, ForceMode.Impulse);
+                }
+            }
+            
             if (col != null && col.tag == "Enemy")
             {
                 Debug.Log("No null");

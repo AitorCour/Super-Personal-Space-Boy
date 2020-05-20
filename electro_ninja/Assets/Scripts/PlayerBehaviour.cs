@@ -28,24 +28,24 @@ public class PlayerBehaviour : MonoBehaviour
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
         ui.Initialize();
         ui.UpdateHitCounter(attackNum);
-        character.skinWidth = 0;
     }
     void Update()
     {
-        if (character.isGrounded)
+        /*if (character.isGrounded)
         {
             moveDirection.y = forceToGround;
         }
         else
         {
             moveDirection.y += Physics.gravity.y * gravityMag * Time.deltaTime;
-            Debug.Log("NotGrounded");
+            //Debug.Log("NotGrounded");
         }
-        character.Move(moveDirection * Time.deltaTime);
+        character.Move(moveDirection * Time.deltaTime);*/
     }
     public void Move(Vector3 direction)
     {
-        character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+        //character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+        transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
         //Debug.Log(direction.x);
 
         if (direction != Vector3.zero)
@@ -54,7 +54,13 @@ public class PlayerBehaviour : MonoBehaviour
             model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, lookRotation, 5);
         }
     }
-    
+    /*private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Enemy")
+        {
+            Debug.Log("OOF");
+        }
+    }*/
     public void Attack()//El attack solo se manda mientras se pulsa el boton
     {
         if (attackNum <= 0) return;
