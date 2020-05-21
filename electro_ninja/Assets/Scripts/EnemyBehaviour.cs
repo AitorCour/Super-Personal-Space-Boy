@@ -13,7 +13,9 @@ public class EnemyBehaviour : MonoBehaviour
     public float attackDistance;
     public float radius;
     public float distance;
+    private float life;
     public bool detected;
+    protected bool dead;
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
     // Start is called before the first frame update
@@ -25,6 +27,8 @@ public class EnemyBehaviour : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         colliders = new List<BoxCollider>();
         AddColliders(transform);
+        dead = false;
+        life = 1;
         foreach(BoxCollider bc in colliders)
         {
             bc.enabled = false;
@@ -74,7 +78,7 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!agent.enabled) return;
+        if (dead) return;
 
         distance = Vector3.Distance(player.transform.position, transform.position);
 
@@ -100,10 +104,18 @@ public class EnemyBehaviour : MonoBehaviour
     }
     public void RecieveHit()
     {
+        life = -1;
+        if(life <= 0)
+        {
+            Dead();
+        }
+    }
+    private void Dead()
+    {
         capsuleCollider.enabled = false;
         agent.enabled = false;
         animator.enabled = false;
-
+        dead = true;
         foreach (BoxCollider bc in colliders)
         {
             bc.enabled = true;

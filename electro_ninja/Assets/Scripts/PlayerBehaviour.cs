@@ -10,15 +10,14 @@ public class PlayerBehaviour : MonoBehaviour
     private RaycastCircle attack;
     private UI_Manager ui;
     public float speed = 10f;
+    public float rayDistance;
     public bool attacking;
-
+    private bool canWalk;
     private int life;
     public int attackNum = 1;
 
-    private float forceToGround = Physics.gravity.y;
-    private float gravityMag = 9.81f;
     private Vector3 moveDirection;
-
+    public LayerMask mask;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,23 +28,33 @@ public class PlayerBehaviour : MonoBehaviour
         ui.Initialize();
         ui.UpdateHitCounter(attackNum);
     }
+    void OnDrawGizmosSelected()
+    {
+        // Draws a blue line from this transform to the target
+        Gizmos.color = Color.blue;
+        Vector3 direction = model.transform.TransformDirection(Vector3.back) * rayDistance;
+        Gizmos.DrawRay(model.transform.position, direction); //forward
+    }
     void Update()
     {
-        /*if (character.isGrounded)
+        Vector3 direction = model.transform.TransformDirection(Vector3.back);
+
+        if (Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
-            moveDirection.y = forceToGround;
+            canWalk = false;
         }
-        else
+        else if (!Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
-            moveDirection.y += Physics.gravity.y * gravityMag * Time.deltaTime;
-            //Debug.Log("NotGrounded");
+            canWalk = true;
         }
-        character.Move(moveDirection * Time.deltaTime);*/
     }
     public void Move(Vector3 direction)
     {
         //character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
-        transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+        if(canWalk)
+        {
+            transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+        }
         //Debug.Log(direction.x);
 
         if (direction != Vector3.zero)

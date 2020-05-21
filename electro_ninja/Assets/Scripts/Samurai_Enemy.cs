@@ -29,6 +29,8 @@ public class Samurai_Enemy : EnemyBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dead) return;
+
         RaycastHit hit = new RaycastHit();
         Vector3 direction = transform.TransformDirection(Vector3.forward);
 
@@ -75,6 +77,8 @@ public class Samurai_Enemy : EnemyBehaviour
     }
     private void Rotate()
     {
+        if (dead) return;
+
         Debug.Log("Rotating");
         agent.isStopped = true;
         float speedRot = Time.deltaTime * speed;

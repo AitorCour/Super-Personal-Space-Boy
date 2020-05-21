@@ -38,18 +38,6 @@ public class RaycastArms : MonoBehaviour
             {
                 Debug.Log("No null");
                 hit.rigidbody.AddForce(direction * hitForce, ForceMode.Impulse);
-
-                /*EnemyBehaviour target = hit.transform.gameObject.GetComponent<EnemyBehaviour>();
-
-                targetEnemy = target;*/
-
-
-                /*targetEnemy.LoseLife(hitDamage);
-                particleBlood[currentBlood].transform.position = hit.point;
-                particleBlood[currentBlood].time = 0;
-                particleBlood[currentBlood].Play();
-                currentBlood++;
-                if (currentBlood >= maxBlood) currentBlood = 0;*/
             }
         }
     }
