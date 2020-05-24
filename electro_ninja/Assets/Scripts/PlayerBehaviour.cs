@@ -4,29 +4,76 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    private CharacterController character;
     public GameObject model;
     private Animator animator;
     private RaycastCircle attack;
     private UI_Manager ui;
+    private CapsuleCollider capsuleCollider;
+    private Rigidbody myRigidbody;
     public float speed = 10f;
     public float rayDistance;
     public bool attacking;
     private bool canWalk;
-    private int life;
+    private bool dead;
+    private int life = 1;
     public int attackNum = 1;
 
     private Vector3 moveDirection;
     public LayerMask mask;
+
+    public List<BoxCollider> colliders;
+    public List<Rigidbody> rigidBody;
     // Start is called before the first frame update
     void Start()
     {
-        character = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         attack = GetComponent<RaycastCircle>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        myRigidbody = GetComponent<Rigidbody>();
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
         ui.Initialize();
         ui.UpdateHitCounter(attackNum);
+        dead = false;
+
+
+        colliders = new List<BoxCollider>();
+        AddColliders(transform);
+        foreach (BoxCollider bc in colliders)
+        {
+            bc.enabled = false;
+        }
+        rigidBody = new List<Rigidbody>();
+        AddRigidbodys(transform);
+        foreach (Rigidbody rb in rigidBody)
+        {
+            rb.useGravity = false;
+        }
+    }
+    private void AddColliders(Transform t)
+    {
+        for (int i = 0; i < t.childCount; i++)
+        {
+            Transform child = t.GetChild(i);
+            AddColliders(child);
+            BoxCollider c = child.gameObject.GetComponent<BoxCollider>();
+            if (c != null)
+            {
+                colliders.Add(c);
+            }
+        }
+    }
+    private void AddRigidbodys(Transform t)
+    {
+        for (int i = 0; i < t.childCount; i++)
+        {
+            Transform child = t.GetChild(i);
+            AddRigidbodys(child);
+            Rigidbody r = child.gameObject.GetComponent<Rigidbody>();
+            if (r != null)
+            {
+                rigidBody.Add(r);
+            }
+        }
     }
     void OnDrawGizmosSelected()
     {
@@ -37,6 +84,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Update()
     {
+        if (dead) return;
         Vector3 direction = model.transform.TransformDirection(Vector3.back);
 
         if (Physics.Raycast(model.transform.position, direction, rayDistance, mask))
@@ -50,10 +98,16 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void Move(Vector3 direction)
     {
+        if (dead) return;
         //character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
         if(canWalk)
         {
             transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+            
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
         }
         //Debug.Log(direction.x);
 
@@ -61,15 +115,16 @@ public class PlayerBehaviour : MonoBehaviour
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction * -1);
             model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, lookRotation, 5);
+            if (canWalk)
+            {
+                animator.SetBool("Walking", true);
+            }
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
         }
     }
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Enemy")
-        {
-            Debug.Log("OOF");
-        }
-    }*/
     public void Attack()//El attack solo se manda mientras se pulsa el boton
     {
         if (attackNum <= 0) return;
@@ -98,5 +153,25 @@ public class PlayerBehaviour : MonoBehaviour
     {
         life -= 1;
         Debug.Log("Dead");
+        if(life >= 0)
+        {
+            Dead();
+        }
+    }
+    private void Dead()
+    {
+        capsuleCollider.enabled = false;
+        myRigidbody.useGravity = false;
+        //agent.enabled = false;
+        animator.enabled = false;
+        dead = true;
+        foreach (BoxCollider bc in colliders)
+        {
+            bc.enabled = true;
+        }
+        foreach (Rigidbody rb in rigidBody)
+        {
+            rb.useGravity = true;
+        }
     }
 }

@@ -25,11 +25,12 @@ public class EnemyBehaviour : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-        colliders = new List<BoxCollider>();
-        AddColliders(transform);
         dead = false;
         life = 1;
-        foreach(BoxCollider bc in colliders)
+
+        colliders = new List<BoxCollider>();
+        AddColliders(transform);
+        foreach (BoxCollider bc in colliders)
         {
             bc.enabled = false;
         }
