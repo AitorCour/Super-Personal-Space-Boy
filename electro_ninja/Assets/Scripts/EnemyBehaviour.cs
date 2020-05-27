@@ -16,6 +16,8 @@ public class EnemyBehaviour : MonoBehaviour
     private float life;
     public bool detected;
     protected bool dead;
+    public bool attacking;
+    private bool moving;
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
     // Start is called before the first frame update
@@ -86,21 +88,38 @@ public class EnemyBehaviour : MonoBehaviour
         if (distance <= attackDistance)
         {
             agent.isStopped = true;
+            moving = false;
             Attack();
+            //DODAMAGE
         }
         else if (distance > attackDistance && detected)
         {
             agent.isStopped = false;
             agent.SetDestination(player.transform.position);
+            moving = true;
+            attacking = false;
         }
         if(distance > radius)
         {
             agent.isStopped = true;
             detected = false;
+
+            moving = false;
+            attacking = false;
         }
         else if(distance <= radius)
         {
             detected = true;
+        }
+        if(moving)
+        {
+            animator.SetBool("Walking", true);
+            animator.SetBool("Attacking", false);
+        }
+        else if(!moving && !attacking)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("Walking", false);
         }
     }
     public void RecieveHit()
@@ -128,7 +147,13 @@ public class EnemyBehaviour : MonoBehaviour
     }
     private void Attack()
     {
-        //Ejecutar animación con tiempo de salida
+        if (attacking) return;
+        else if(!attacking)
+        {
+            animator.SetBool("Attacking", true);
+            animator.SetBool("Walking", false);
+            attacking = true;
+        }
     }
     //Cada eelemento separedo del enemigo tiene un rigidbody, y en el momento de golpear, se "activan" estos rigidbody, el navmesh se desactiva, y se desemparentan los componentes
 }

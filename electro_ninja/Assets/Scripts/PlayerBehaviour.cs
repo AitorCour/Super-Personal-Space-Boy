@@ -12,8 +12,9 @@ public class PlayerBehaviour : MonoBehaviour
     private Rigidbody myRigidbody;
     public float speed = 10f;
     public float rayDistance;
+    public float rayDistance2;
     public bool attacking;
-    private bool canWalk;
+    public bool canWalk;
     private bool dead;
     private int life = 1;
     public int attackNum = 1;
@@ -81,11 +82,16 @@ public class PlayerBehaviour : MonoBehaviour
         Gizmos.color = Color.blue;
         Vector3 direction = model.transform.TransformDirection(Vector3.back) * rayDistance;
         Gizmos.DrawRay(model.transform.position, direction); //forward
+
+        Vector3 directionG = model.transform.TransformDirection(Vector3.down) * rayDistance2;
+        Gizmos.DrawRay(model.transform.position, directionG); //forward
+        Gizmos.DrawRay(model.transform.position + new Vector3(0,0,0.4f), directionG); //forward
     }
     void Update()
     {
         if (dead) return;
         Vector3 direction = model.transform.TransformDirection(Vector3.back);
+        Vector3 directionG = model.transform.TransformDirection(Vector3.down);
 
         if (Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
@@ -94,6 +100,21 @@ public class PlayerBehaviour : MonoBehaviour
         else if (!Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
             canWalk = true;
+        }
+
+        if (Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || 
+            Physics.Raycast(model.transform.position + new Vector3(0, 0, -0.4f), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(0, 0, 0.4f), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(-0.4f, 0, 0), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(0.4f, 0, 0), directionG, rayDistance2, mask))
+        {
+            canWalk = true;
+            myRigidbody.drag = 1;
+        }
+        else if (!Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0, 0, -0.4f), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0, 0, 0.4f), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(-0.4f, 0, 0), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0.4f, 0, 0), directionG, rayDistance2, mask))
+        {
+            canWalk = false;
+            myRigidbody.drag = 0;
         }
     }
     public void Move(Vector3 direction)
