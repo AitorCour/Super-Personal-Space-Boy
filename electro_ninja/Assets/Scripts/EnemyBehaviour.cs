@@ -20,6 +20,9 @@ public class EnemyBehaviour : MonoBehaviour
     private bool moving;
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
+    public List<Transform> transformChilds;
+    public List<Vector3> vectorChilds;
+    public bool reconstruct = false;
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -43,6 +46,12 @@ public class EnemyBehaviour : MonoBehaviour
         {
             rb.useGravity = false;
         }
+
+        transformChilds = new List<Transform>();
+        AddTransforms(transform);
+
+        vectorChilds = new List<Vector3>();
+        AddVectors(transform);
 
         agent.speed = speed;
         agent.enabled = true;
@@ -73,6 +82,34 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
     }
+    private void AddTransforms(Transform t)
+    {
+        for(int i = 0; i < t.childCount; i++)
+        {
+            Transform child = t.GetChild(i);
+            AddTransforms(child);
+            Transform tr = child.gameObject.GetComponent<Transform>();
+            if (tr != null)
+            {
+                transformChilds.Add(tr);
+            }
+        }
+    }
+    private void AddVectors(Transform t)
+    {
+        for (int i = 0; i < t.childCount; i++)
+        {
+            Transform child = t.GetChild(i);
+            AddVectors(child);
+            //Vector3 v = child.gameObject.GetComponent<Vector3>();
+            Vector3 v = child.gameObject.transform.position;
+
+            if (v != null)
+            {
+                vectorChilds.Add(v);
+            }
+        }
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -89,7 +126,10 @@ public class EnemyBehaviour : MonoBehaviour
         {
             agent.isStopped = true;
             moving = false;
-            Attack();
+            if(!attacking)
+            {
+                Attack();
+            }
             //DODAMAGE
         }
         else if (distance > attackDistance && detected)
@@ -114,12 +154,14 @@ public class EnemyBehaviour : MonoBehaviour
         if(moving)
         {
             animator.SetBool("Walking", true);
-            animator.SetBool("Attacking", false);
         }
         else if(!moving && !attacking)
         {
-            animator.SetBool("Attacking", false);
             animator.SetBool("Walking", false);
+        }
+        if(reconstruct)
+        {
+            Reconstruct();
         }
     }
     public void RecieveHit()
@@ -136,6 +178,7 @@ public class EnemyBehaviour : MonoBehaviour
         agent.enabled = false;
         animator.enabled = false;
         dead = true;
+        //SeparateChildrens();
         foreach (BoxCollider bc in colliders)
         {
             bc.enabled = true;
@@ -144,15 +187,54 @@ public class EnemyBehaviour : MonoBehaviour
         {
             rb.useGravity = true;
         }
+        Reconstruct();
     }
     private void Attack()
     {
-        if (attacking) return;
-        else if(!attacking)
-        {
+        //if (attacking) return;
+        //else if(!attacking)
+        //{
+        Debug.Log("attack");
+            animator.SetTrigger("Attack");
             animator.SetBool("Attacking", true);
             animator.SetBool("Walking", false);
             attacking = true;
+        //}
+    }
+    private void Reconstruct()
+    {
+        Debug.Log("reconstruction");
+        //Los aparta del mapa
+        foreach (BoxCollider bc in colliders)
+        {
+            bc.enabled = false;
+        }
+        foreach (Rigidbody rb in rigidBody)
+        {
+            rb.useGravity = false;
+        }
+        foreach (Transform tr in transformChilds)
+        {
+            tr.transform.position = Vector3.zero;//pondrá todos los obj a 0, su posición original
+            //ResetPosition(tr);
+        }
+
+
+        
+    }
+    private void ResetPosition(Transform t)
+    {
+        Debug.Log("reseting");
+        for (int i = 0; i < t.childCount; i++)
+        {
+            /*Transform child = t.GetChild(i);
+            AddTransforms(child);
+            Transform tr = child.gameObject.GetComponent<Transform>();
+            if (tr != null)
+            {
+                transformChilds.Add(tr);
+            }*/
+            transformChilds[i].position = vectorChilds[i];
         }
     }
     //Cada eelemento separedo del enemigo tiene un rigidbody, y en el momento de golpear, se "activan" estos rigidbody, el navmesh se desactiva, y se desemparentan los componentes

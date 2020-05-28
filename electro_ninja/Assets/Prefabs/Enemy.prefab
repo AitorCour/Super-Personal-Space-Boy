@@ -640,10 +640,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  attackDistance: 2.5
+  attackDistance: 1.5
   radius: 8.49
   distance: 0
   detected: 0
+  attacking: 0
   colliders: []
   rigidBody: []
 --- !u!1 &2170487944372876242

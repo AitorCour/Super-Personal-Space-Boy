@@ -52,6 +52,8 @@ public class Samurai_Enemy : EnemyBehaviour
             destinationAchieved = false;
             waiting = false;
             endWait = false;
+            attacking = true;
+
             animator.SetBool("Running", true);
         }
         else if(distance <= attackDistance && detected) // si la distancia con el destino, es menos a la distancia de ataque, se para y rota
@@ -59,13 +61,15 @@ public class Samurai_Enemy : EnemyBehaviour
             //Debug.Log("destination achieved");
             destinationAchieved = true;
             detected = false;
+            attacking = false;
+
             animator.SetBool("Running", false);
             //StartCoroutine(WaitRotate());
             //Poner un counter para la rotación
         }
         else if(!detected && !waiting)
         {
-            Debug.Log("StartWait");
+            //Debug.Log("StartWait");
             StartCoroutine(WaitRotate());
             waiting = true;
             endWait = false;
@@ -79,16 +83,16 @@ public class Samurai_Enemy : EnemyBehaviour
     {
         if (dead) return;
 
-        Debug.Log("Rotating");
         agent.isStopped = true;
         float speedRot = Time.deltaTime * speed;
         transform.Rotate(Vector3.up * speedRot, Space.World);
         destinationAchieved = false;
+        attacking = false;
     }
     private IEnumerator WaitRotate()
     {
         yield return new WaitForSeconds(1);
         endWait = true; 
-        Debug.Log("EndWait");
+        //Debug.Log("EndWait");
     }
 }
