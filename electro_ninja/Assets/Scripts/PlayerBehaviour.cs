@@ -148,7 +148,8 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void Attack()//El attack solo se manda mientras se pulsa el boton
     {
-        if (attackNum <= 0) return;
+        if (attackNum <= 0 || dead) return;
+
         else if(attackNum < 0)
         {
             attackNum = 0;
@@ -185,6 +186,7 @@ public class PlayerBehaviour : MonoBehaviour
         myRigidbody.useGravity = false;
         //agent.enabled = false;
         animator.enabled = false;
+        attacking = false;
         dead = true;
         foreach (BoxCollider bc in colliders)
         {

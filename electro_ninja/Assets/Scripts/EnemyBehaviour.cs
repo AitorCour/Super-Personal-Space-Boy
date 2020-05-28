@@ -18,11 +18,11 @@ public class EnemyBehaviour : MonoBehaviour
     protected bool dead;
     public bool attacking;
     private bool moving;
+
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
     public List<Transform> transformChilds;
-    public List<Vector3> vectorChilds;
-    public bool reconstruct = false;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -49,9 +49,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         transformChilds = new List<Transform>();
         AddTransforms(transform);
-
-        vectorChilds = new List<Vector3>();
-        AddVectors(transform);
 
         agent.speed = speed;
         agent.enabled = true;
@@ -92,21 +89,6 @@ public class EnemyBehaviour : MonoBehaviour
             if (tr != null)
             {
                 transformChilds.Add(tr);
-            }
-        }
-    }
-    private void AddVectors(Transform t)
-    {
-        for (int i = 0; i < t.childCount; i++)
-        {
-            Transform child = t.GetChild(i);
-            AddVectors(child);
-            //Vector3 v = child.gameObject.GetComponent<Vector3>();
-            Vector3 v = child.gameObject.transform.position;
-
-            if (v != null)
-            {
-                vectorChilds.Add(v);
             }
         }
     }
@@ -159,10 +141,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             animator.SetBool("Walking", false);
         }
-        if(reconstruct)
-        {
-            Reconstruct();
-        }
+        
     }
     public void RecieveHit()
     {
@@ -187,21 +166,28 @@ public class EnemyBehaviour : MonoBehaviour
         {
             rb.useGravity = true;
         }
-        Reconstruct();
+        StartCoroutine(Minimize());
+        //Reconstruct();
     }
     private void Attack()
     {
-        //if (attacking) return;
-        //else if(!attacking)
-        //{
-        Debug.Log("attack");
-            animator.SetTrigger("Attack");
-            animator.SetBool("Attacking", true);
-            animator.SetBool("Walking", false);
-            attacking = true;
-        //}
+        animator.SetBool("Attacking", true);
+        animator.SetBool("Walking", false);
+        attacking = true;
     }
-    private void Reconstruct()
+    private IEnumerator Minimize()
+    {
+        yield return new WaitForSeconds(20);
+        foreach (Transform tr in transformChilds)
+        {
+            tr.localScale = new Vector3(0, 0, 0);
+
+        }
+        //https://answers.unity.com/questions/1230671/how-to-fade-out-a-game-object-using-c.html
+        //HACER UN FADE
+    }
+
+    /*private void Reconstruct()
     {
         Debug.Log("reconstruction");
         //Los aparta del mapa
@@ -213,29 +199,19 @@ public class EnemyBehaviour : MonoBehaviour
         {
             rb.useGravity = false;
         }
-        foreach (Transform tr in transformChilds)
-        {
-            tr.transform.position = Vector3.zero;//pondrá todos los obj a 0, su posición original
-            //ResetPosition(tr);
-        }
+        //ResetPosition();
 
 
-        
-    }
-    private void ResetPosition(Transform t)
+    }*/
+    /*private void ResetPosition()
     {
         Debug.Log("reseting");
-        for (int i = 0; i < t.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            /*Transform child = t.GetChild(i);
-            AddTransforms(child);
-            Transform tr = child.gameObject.GetComponent<Transform>();
-            if (tr != null)
-            {
-                transformChilds.Add(tr);
-            }*/
-            transformChilds[i].position = vectorChilds[i];
+            //transformChilds[i].position = vectorChilds[i];
+            transformChilds[i].position = Vector3.zero;
+            transformChilds[i].rotation = Quaternion.Euler(0, 0, 0);
         }
-    }
+    }*/
     //Cada eelemento separedo del enemigo tiene un rigidbody, y en el momento de golpear, se "activan" estos rigidbody, el navmesh se desactiva, y se desemparentan los componentes
 }
