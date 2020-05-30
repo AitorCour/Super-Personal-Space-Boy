@@ -9,19 +9,23 @@ public class EnemyBehaviour : MonoBehaviour
     protected PlayerBehaviour player;
     protected Animator animator;
     private CapsuleCollider capsuleCollider;
+
     public float speed;
     public float attackDistance;
     public float radius;
     public float distance;
     private float life;
+
     public bool detected;
     protected bool dead;
     public bool attacking;
     private bool moving;
+    private bool optimized;
 
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
     public List<Transform> transformChilds;
+    public List<MeshRenderer> renderers;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -49,6 +53,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         transformChilds = new List<Transform>();
         AddTransforms(transform);
+
+        renderers = new List<MeshRenderer>();
+        AddRenderers(transform);
 
         agent.speed = speed;
         agent.enabled = true;
@@ -92,6 +99,19 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
     }
+    private void AddRenderers(Transform t)
+    {
+        for (int i = 0; i < t.childCount; i++)
+        {
+            Transform child = t.GetChild(i);
+            AddRenderers(child);
+            MeshRenderer mr = child.gameObject.GetComponent<MeshRenderer>();
+            if (mr != null)
+            {
+                renderers.Add(mr);
+            }
+        }
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -101,10 +121,9 @@ public class EnemyBehaviour : MonoBehaviour
     void Update()
     {
         if (dead) return;
-
         distance = Vector3.Distance(player.transform.position, transform.position);
 
-        if (distance <= attackDistance)
+        if (distance <= attackDistance)//Start Attack
         {
             agent.isStopped = true;
             moving = false;
@@ -114,34 +133,55 @@ public class EnemyBehaviour : MonoBehaviour
             }
             //DODAMAGE
         }
-        else if (distance > attackDistance && detected)
+        else if (distance > attackDistance && detected)//Go to player
         {
+            animator.SetBool("Walking", true);
             agent.isStopped = false;
             agent.SetDestination(player.transform.position);
             moving = true;
             attacking = false;
         }
-        if(distance > radius)
-        {
-            agent.isStopped = true;
-            detected = false;
-
-            moving = false;
-            attacking = false;
-        }
-        else if(distance <= radius)
-        {
-            detected = true;
-        }
-        if(moving)
-        {
-            animator.SetBool("Walking", true);
-        }
-        else if(!moving && !attacking)
+        if(distance > radius)//Idle
         {
             animator.SetBool("Walking", false);
+            agent.isStopped = true;
+            detected = false;
+            moving = false;
+            attacking = false;
+
+            if (distance >= radius * 2)
+            {
+                Debug.Log("Optimo");
+                Optimize();
+            }
+            else if (distance < radius * 2)
+            {
+                Deoptimize();
+            }
         }
-        
+        else if(distance <= radius)//Set detected
+        {
+            detected = true;
+            if (optimized) Deoptimize();
+        }
+    }
+    private void Optimize()
+    {
+        optimized = true;
+        animator.enabled = false;
+        foreach(MeshRenderer mr in renderers)
+        {
+            mr.enabled = false;
+        }
+    }
+    private void Deoptimize()
+    {
+        optimized = false;
+        animator.enabled = true;
+        foreach (MeshRenderer mr in renderers)
+        {
+            mr.enabled = true;
+        }
     }
     public void RecieveHit()
     {
@@ -166,7 +206,11 @@ public class EnemyBehaviour : MonoBehaviour
         {
             rb.useGravity = true;
         }
-        StartCoroutine(Minimize());
+        foreach (Transform tr in transformChilds)
+        {
+            tr.parent = null;
+        }
+        StartCoroutine(FallRest());
         //Reconstruct();
     }
     private void Attack()
@@ -175,43 +219,28 @@ public class EnemyBehaviour : MonoBehaviour
         animator.SetBool("Walking", false);
         attacking = true;
     }
-    private IEnumerator Minimize()
+    private IEnumerator FallRest()
     {
-        yield return new WaitForSeconds(20);
-        foreach (Transform tr in transformChilds)
-        {
-            tr.localScale = new Vector3(0, 0, 0);
-
-        }
-        //https://answers.unity.com/questions/1230671/how-to-fade-out-a-game-object-using-c.html
-        //HACER UN FADE
-    }
-
-    /*private void Reconstruct()
-    {
-        Debug.Log("reconstruction");
-        //Los aparta del mapa
+        yield return new WaitForSeconds(10);
         foreach (BoxCollider bc in colliders)
         {
-            bc.enabled = false;
+            bc.isTrigger = true;
         }
         foreach (Rigidbody rb in rigidBody)
         {
             rb.useGravity = false;
         }
-        //ResetPosition();
-
-
-    }*/
-    /*private void ResetPosition()
+        StartCoroutine(Reactive());
+        //https://answers.unity.com/questions/1230671/how-to-fade-out-a-game-object-using-c.html
+        //HACER UN FADE
+    }
+    private IEnumerator Reactive()
     {
-        Debug.Log("reseting");
-        for (int i = 0; i < transform.childCount; i++)
+        yield return new WaitForSeconds(2);
+        foreach (Rigidbody rb in rigidBody)
         {
-            //transformChilds[i].position = vectorChilds[i];
-            transformChilds[i].position = Vector3.zero;
-            transformChilds[i].rotation = Quaternion.Euler(0, 0, 0);
+            rb.useGravity = true;
         }
-    }*/
+    }
     //Cada eelemento separedo del enemigo tiene un rigidbody, y en el momento de golpear, se "activan" estos rigidbody, el navmesh se desactiva, y se desemparentan los componentes
 }
