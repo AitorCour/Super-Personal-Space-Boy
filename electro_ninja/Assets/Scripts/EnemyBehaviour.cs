@@ -17,7 +17,7 @@ public class EnemyBehaviour : MonoBehaviour
     private float life;
 
     public bool detected;
-    protected bool dead;
+    public bool dead;
     public bool attacking;
     private bool moving;
     private bool optimized;
