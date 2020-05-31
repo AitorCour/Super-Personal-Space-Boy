@@ -149,7 +149,7 @@ public class EnemyBehaviour : MonoBehaviour
             moving = false;
             attacking = false;
 
-            if (distance >= radius * 2)
+            if (distance >= radius * 2 && !optimized)
             {
                 Debug.Log("Optimo");
                 Optimize();
@@ -167,12 +167,12 @@ public class EnemyBehaviour : MonoBehaviour
     }
     private void Optimize()
     {
-        optimized = true;
         animator.enabled = false;
         foreach(MeshRenderer mr in renderers)
         {
             mr.enabled = false;
         }
+        optimized = true;
     }
     private void Deoptimize()
     {

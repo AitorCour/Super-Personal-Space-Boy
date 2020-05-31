@@ -148,7 +148,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void Attack()//El attack solo se manda mientras se pulsa el boton
     {
-        if (attackNum <= 0 || dead) return;
+        if (/*attackNum <= 0 ||*/ dead) return;
 
         else if(attackNum < 0)
         {
