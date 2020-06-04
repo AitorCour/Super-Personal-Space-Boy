@@ -21,7 +21,7 @@ public class RaycastCircle : MonoBehaviour
     }
     public void Attack()
     {
-        Debug.Log("Attackinggg");
+        //Debug.Log("Attackinggg");
         Vector3 origin = transform.position;
         Collider[] colliders = Physics.OverlapSphere(origin, rayDistance);
 
@@ -41,11 +41,9 @@ public class RaycastCircle : MonoBehaviour
             if (col != null && col.tag == "Enemy")
             {
                 Debug.Log("No null");
-                //hit.rigidbody.AddForce(direction * hitForce, ForceMode.Impulse);
                 EnemyBehaviour target = hit.transform.gameObject.GetComponent<EnemyBehaviour>();
                 target.RecieveHit();
             }
-                /*EnemyBehaviour target = hit.transform.gameObject.GetComponent<EnemyBehaviour>();*/
         }
     }
 }

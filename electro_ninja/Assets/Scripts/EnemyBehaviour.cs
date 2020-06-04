@@ -151,7 +151,7 @@ public class EnemyBehaviour : MonoBehaviour
 
             if (distance >= radius * 2 && !optimized)
             {
-                Debug.Log("Optimo");
+                //Debug.Log("Optimo");
                 Optimize();
             }
             else if (distance < radius * 2)

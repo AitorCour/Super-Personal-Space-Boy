@@ -13,11 +13,17 @@ public class PlayerBehaviour : MonoBehaviour
     public float speed = 10f;
     public float rayDistance;
     public float rayDistance2;
+    public float attackDistance;
+    private float upForce = 1f;
+
     public bool attacking;
     public bool canWalk;
     private bool dead;
+
     private int life = 1;
     public int attackNum = 1;
+    public int force;
+    
 
     private Vector3 moveDirection;
     public LayerMask mask;
@@ -33,7 +39,7 @@ public class PlayerBehaviour : MonoBehaviour
         myRigidbody = GetComponent<Rigidbody>();
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
         ui.Initialize();
-        ui.UpdateHitCounter(attackNum);
+        //ui.UpdateHitCounter(attackNum);
         dead = false;
 
 
@@ -78,14 +84,19 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        // Draws a blue line from this transform to the target
+        //Front
         Gizmos.color = Color.blue;
         Vector3 direction = model.transform.TransformDirection(Vector3.back) * rayDistance;
         Gizmos.DrawRay(model.transform.position, direction); //forward
 
+        //Ground
         Vector3 directionG = model.transform.TransformDirection(Vector3.down) * rayDistance2;
         Gizmos.DrawRay(model.transform.position, directionG); //forward
         Gizmos.DrawRay(model.transform.position + new Vector3(0,0,0.4f), directionG); //forward
+
+        //Attack
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
     void Update()
     {
@@ -148,12 +159,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void Attack()//El attack solo se manda mientras se pulsa el boton
     {
-        if (/*attackNum <= 0 ||*/ dead) return;
-
-        else if(attackNum < 0)
-        {
-            attackNum = 0;
-        }
+        if (dead) return;
         if(!attacking)
         {
             animator.SetTrigger("Attack");
@@ -163,13 +169,30 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else if(attacking)//hacer que esto se llame incluso cuando no se pulsa
         {
-            attack.Attack();
+            Vector3 origin = transform.position;
+            Collider[] colliders = Physics.OverlapSphere(origin, attackDistance);
+
+            foreach (Collider hit in colliders)
+            {
+                Rigidbody rb = hit.GetComponent<Rigidbody>();
+                Collider col = hit.GetComponent<Collider>();
+
+                if (col.tag != "Player")
+                {
+                    if (rb != null)
+                    {
+                        rb.AddExplosionForce(force, origin, attackDistance, upForce, ForceMode.Impulse);
+                    }
+                }
+
+                if (col != null && col.tag == "Enemy")
+                {
+                    Debug.Log("No null");
+                    EnemyBehaviour target = hit.transform.gameObject.GetComponent<EnemyBehaviour>();
+                    target.RecieveHit();
+                }
+            }
         }
-    }
-    public void UpdateHits(int hit)
-    {
-        attackNum += hit;
-        ui.UpdateHitCounter(attackNum);
     }
     public void LoseLife()
     {

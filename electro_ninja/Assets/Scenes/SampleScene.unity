@@ -979,6 +979,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Samurai_FBX
       objectReference: {fileID: 0}
+    - target: {fileID: 100038, guid: 1490b5fd69e0b1647b358b0e9af2b92e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400038, guid: 1490b5fd69e0b1647b358b0e9af2b92e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.4
@@ -2395,6 +2399,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_New
       objectReference: {fileID: 0}
+    - target: {fileID: 1872258991013119302, guid: 007b81b55cb02ca40a1dadf5a836692c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1872258991013119420, guid: 007b81b55cb02ca40a1dadf5a836692c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2605,7 +2614,7 @@ PrefabInstance:
     - target: {fileID: 4412896741648408395, guid: f6802272c85f6a640879677541026c13,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4412896741648408399, guid: f6802272c85f6a640879677541026c13,
         type: 3}

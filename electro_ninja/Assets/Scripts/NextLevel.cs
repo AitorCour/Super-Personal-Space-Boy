@@ -16,7 +16,7 @@ public class NextLevel : MonoBehaviour
         origins = new List<GameObject>();
         enemies = new List<GameObject>();
         AddTransforms();
-        AddEnemies();
+        //AddEnemies();
     }
     private void AddEnemies()
     {
@@ -59,11 +59,11 @@ public class NextLevel : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        CheckDead();
+        //CheckDead();
         //transport
         if (other.tag == "Player")
         {
-            //Transport();
+            Transport();
         }
         if(enemies == null)
         {
@@ -72,7 +72,7 @@ public class NextLevel : MonoBehaviour
     }
     private void Transport()
     {
-        player.UpdateHits(1);
+        //player.UpdateHits(1);
         player.transform.position = origins[nextPoint].transform.position;
     }
 }

@@ -24,14 +24,21 @@ public class UI_Manager : MonoBehaviour
     public void StartCooldown()
     {
         cooling = true;
+        Debug.Log("StartAttack");
     }
     public void CooldownUpdate()
     {
+
         coolImage.fillAmount += 1 / cooldownTime * Time.deltaTime;
-        if (coolImage.fillAmount >= 1)
+        if (coolImage.fillAmount >= 1 && cooling)
         {
-            cooling = false;
-            coolImage.fillAmount = 0;
+            EndCooldown();
         }
+    }
+    public void EndCooldown()
+    {
+        Debug.Log("EndCooldown");
+        cooling = false;
+        coolImage.fillAmount = 0;
     }
 }

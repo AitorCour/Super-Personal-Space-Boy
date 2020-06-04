@@ -5,16 +5,13 @@ using UnityEngine;
 public class RB_Object : MonoBehaviour
 {
     private PlayerBehaviour player;
+    private UI_Manager ui;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -23,7 +20,9 @@ public class RB_Object : MonoBehaviour
             EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
             enemy.RecieveHit();
             Debug.Log("EnemyHitted");
-            player.UpdateHits(1);
+            //EndCooldown
+            ui.EndCooldown();
+            //player.UpdateHits(1);
         }
     }
 }

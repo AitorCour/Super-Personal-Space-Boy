@@ -13,6 +13,5 @@ public class AnimationEvent : MonoBehaviour
     void EndAnimation()
     {
         player.attacking = false;
-        player.UpdateHits(-1);//Hace un ataque, así que lo pierde;
     }
 }
