@@ -5,91 +5,91 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Belly
     100002: Chest
-    100004: Hat
-    100006: Head
-    100008: L_Arm
-    100010: L_AvantArm
-    100012: L_Finger
-    100014: L_Hand
-    100016: L_Leg_Inf
-    100018: L_Leg_Sup
-    100020: L_Toe
-    100022: Neck
-    100024: R_Arm
-    100026: R_AvantArm
-    100028: R_Finger
-    100030: R_Hand
-    100032: R_Leg_Inf
-    100034: R_Leg_Sup
-    100036: R_Toe
-    100038: //RootNode
-    100040: Sword
+    100004: Cube
+    100006: Hat
+    100008: Head
+    100010: L_Arm
+    100012: L_AvantArm
+    100014: L_Finger
+    100016: L_Hand
+    100018: L_Leg_Inf
+    100020: L_Leg_Sup
+    100022: L_Toe
+    100024: Neck
+    100026: R_Arm
+    100028: R_AvantArm
+    100030: R_Finger
+    100032: R_Hand
+    100034: R_Leg_Inf
+    100036: R_Leg_Sup
+    100038: R_Toe
+    100040: //RootNode
     400000: Belly
     400002: Chest
-    400004: Hat
-    400006: Head
-    400008: L_Arm
-    400010: L_AvantArm
-    400012: L_Finger
-    400014: L_Hand
-    400016: L_Leg_Inf
-    400018: L_Leg_Sup
-    400020: L_Toe
-    400022: Neck
-    400024: R_Arm
-    400026: R_AvantArm
-    400028: R_Finger
-    400030: R_Hand
-    400032: R_Leg_Inf
-    400034: R_Leg_Sup
-    400036: R_Toe
-    400038: //RootNode
-    400040: Sword
+    400004: Cube
+    400006: Hat
+    400008: Head
+    400010: L_Arm
+    400012: L_AvantArm
+    400014: L_Finger
+    400016: L_Hand
+    400018: L_Leg_Inf
+    400020: L_Leg_Sup
+    400022: L_Toe
+    400024: Neck
+    400026: R_Arm
+    400028: R_AvantArm
+    400030: R_Finger
+    400032: R_Hand
+    400034: R_Leg_Inf
+    400036: R_Leg_Sup
+    400038: R_Toe
+    400040: //RootNode
     2100000: Material.001
     2100002: Material
     2100004: No Name
     2300000: Belly
     2300002: Chest
-    2300004: Hat
-    2300006: Head
-    2300008: L_Arm
-    2300010: L_AvantArm
-    2300012: L_Finger
-    2300014: L_Hand
-    2300016: L_Leg_Inf
-    2300018: L_Leg_Sup
-    2300020: L_Toe
-    2300022: Neck
-    2300024: R_Arm
-    2300026: R_AvantArm
-    2300028: R_Finger
-    2300030: R_Hand
-    2300032: R_Leg_Inf
-    2300034: R_Leg_Sup
-    2300036: R_Toe
-    2300038: //RootNode
-    2300040: Sword
+    2300004: Cube
+    2300006: Hat
+    2300008: Head
+    2300010: L_Arm
+    2300012: L_AvantArm
+    2300014: L_Finger
+    2300016: L_Hand
+    2300018: L_Leg_Inf
+    2300020: L_Leg_Sup
+    2300022: L_Toe
+    2300024: Neck
+    2300026: R_Arm
+    2300028: R_AvantArm
+    2300030: R_Finger
+    2300032: R_Hand
+    2300034: R_Leg_Inf
+    2300036: R_Leg_Sup
+    2300038: R_Toe
+    2300040: //RootNode
     3300000: Belly
     3300002: Chest
-    3300004: Hat
-    3300006: Head
-    3300008: L_Arm
-    3300010: L_AvantArm
-    3300012: L_Finger
-    3300014: L_Hand
-    3300016: L_Leg_Inf
-    3300018: L_Leg_Sup
-    3300020: L_Toe
-    3300022: Neck
-    3300024: R_Arm
-    3300026: R_AvantArm
-    3300028: R_Finger
-    3300030: R_Hand
-    3300032: R_Leg_Inf
-    3300034: R_Leg_Sup
-    3300036: R_Toe
-    3300038: //RootNode
-    3300040: Sword
+    3300004: Cube
+    3300006: Hat
+    3300008: Head
+    3300010: L_Arm
+    3300012: L_AvantArm
+    3300014: L_Finger
+    3300016: L_Hand
+    3300018: L_Leg_Inf
+    3300020: L_Leg_Sup
+    3300022: L_Toe
+    3300024: Neck
+    3300026: R_Arm
+    3300028: R_AvantArm
+    3300030: R_Finger
+    3300032: R_Hand
+    3300034: R_Leg_Inf
+    3300036: R_Leg_Sup
+    3300038: R_Toe
+    3300040: //RootNode
     4300000: Hip
     4300002: L_Leg_Sup
     4300004: L_Leg_Inf
@@ -110,7 +110,7 @@ ModelImporter:
     4300034: R_AvantArm
     4300036: R_Hand
     4300038: R_Finger
-    4300040: Sword
+    4300040: Cube
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -155,7 +155,7 @@ ModelImporter:
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 1
+    weldVertices: 0
     preserveHierarchy: 0
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -173,7 +173,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

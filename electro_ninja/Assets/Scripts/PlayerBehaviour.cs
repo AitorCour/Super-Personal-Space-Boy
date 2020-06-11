@@ -18,6 +18,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public bool attacking;
     public bool canWalk;
+    private bool canWalkForward;
     private bool dead;
 
     private int life = 1;
@@ -106,11 +107,11 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
-            canWalk = false;
+            canWalkForward = false;
         }
         else if (!Physics.Raycast(model.transform.position, direction, rayDistance, mask))
         {
-            canWalk = true;
+            canWalkForward = true;
         }
 
         if (Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || 
@@ -132,7 +133,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if (dead) return;
         //character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
-        if(canWalk)
+        if(canWalk && canWalkForward)
         {
             transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
             
@@ -147,7 +148,7 @@ public class PlayerBehaviour : MonoBehaviour
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction * -1);
             model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, lookRotation, 5);
-            if (canWalk)
+            if (canWalk && canWalkForward)
             {
                 animator.SetBool("Walking", true);
             }

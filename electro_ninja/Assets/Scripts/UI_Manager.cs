@@ -9,6 +9,7 @@ public class UI_Manager : MonoBehaviour
     public Image coolImage;
 
     public float cooldownTime;
+    private int totalScore;
     public bool cooling;
     // Start is called before the first frame update
     public void Initialize()
@@ -16,10 +17,12 @@ public class UI_Manager : MonoBehaviour
         hitCounter = GameObject.FindGameObjectWithTag("HitText").GetComponent<Text>();
     }
 
-    public void UpdateHitCounter(int hits)
+    public void UpdateScore(int score)
     {
-        string h = "hits: " + hits;
+        totalScore = totalScore + score;
+        string h = "Score: " + totalScore;
         hitCounter.text = h;
+        Debug.Log(totalScore);
     }
     public void StartCooldown()
     {

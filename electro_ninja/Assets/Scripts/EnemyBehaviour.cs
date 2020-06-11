@@ -7,6 +7,7 @@ public class EnemyBehaviour : MonoBehaviour
 {
     protected NavMeshAgent agent;
     protected PlayerBehaviour player;
+    protected UI_Manager ui;
     protected Animator animator;
     private CapsuleCollider capsuleCollider;
 
@@ -31,10 +32,12 @@ public class EnemyBehaviour : MonoBehaviour
     protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
+        ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         dead = false;
+        detected = false;
         life = 1;
 
         colliders = new List<BoxCollider>();
@@ -141,11 +144,11 @@ public class EnemyBehaviour : MonoBehaviour
             moving = true;
             attacking = false;
         }
-        if(distance > radius)//Idle
+        if(distance > radius && !detected)//Idle
         {
             animator.SetBool("Walking", false);
             agent.isStopped = true;
-            detected = false;
+            
             moving = false;
             attacking = false;
 
@@ -197,6 +200,8 @@ public class EnemyBehaviour : MonoBehaviour
         agent.enabled = false;
         animator.enabled = false;
         dead = true;
+        ui.UpdateScore(100);
+
         //SeparateChildrens();
         foreach (BoxCollider bc in colliders)
         {
