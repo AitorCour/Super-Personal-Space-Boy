@@ -9,6 +9,7 @@ TagManager:
   - HitText
   - Origin
   - DynamicJoystick
+  - Manager
   layers:
   - Default
   - TransparentFX

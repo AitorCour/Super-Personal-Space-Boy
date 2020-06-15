@@ -8,10 +8,11 @@ public class InputManager : MonoBehaviour
     private Vector3 axis;
     private PlayerBehaviour player;
     private UI_Manager ui;
+    private GameManager gameManager;
     private DynamicJoystick joystick;
     public bool mobileCtrl;
 
-    void Start()
+    public void Initialize()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();

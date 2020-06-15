@@ -7,7 +7,6 @@ public class PlayerBehaviour : MonoBehaviour
     public GameObject model;
     private Animator animator;
     private RaycastCircle attack;
-    private UI_Manager ui;
     private CapsuleCollider capsuleCollider;
     private Rigidbody myRigidbody;
     public float speed = 10f;
@@ -38,8 +37,6 @@ public class PlayerBehaviour : MonoBehaviour
         attack = GetComponent<RaycastCircle>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         myRigidbody = GetComponent<Rigidbody>();
-        ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
-        ui.Initialize();
         //ui.UpdateHitCounter(attackNum);
         dead = false;
 
