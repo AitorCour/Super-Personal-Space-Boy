@@ -6,7 +6,6 @@ public class Samurai_Enemy : EnemyBehaviour
 {
     public LayerMask mask;
     public float acceleration;
-    public float speedRot;
     private Vector3 destination;
     public bool destinationAchieved;
     private bool waiting;

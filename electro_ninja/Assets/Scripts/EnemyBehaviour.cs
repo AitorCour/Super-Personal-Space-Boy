@@ -9,18 +9,17 @@ public class EnemyBehaviour : MonoBehaviour
     protected PlayerBehaviour player;
     protected UI_Manager ui;
     protected Animator animator;
-    private CapsuleCollider capsuleCollider;
+    protected CapsuleCollider capsuleCollider;
 
     public float speed;
     public float attackDistance;
     public float radius;
-    public float distance;
-    private float life;
+    protected float distance;
+    protected float life;
 
     public bool detected;
     public bool dead;
     public bool attacking;
-    private bool moving;
     private bool optimized;
 
     public List<BoxCollider> colliders;
@@ -63,7 +62,7 @@ public class EnemyBehaviour : MonoBehaviour
         agent.speed = speed;
         agent.enabled = true;
     }
-    private void AddColliders(Transform t)
+    protected virtual void AddColliders(Transform t)
     {
         for(int i = 0; i < t.childCount; i++)
         {
@@ -76,7 +75,7 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
     }
-    private void AddRigidbodys(Transform t)
+    protected virtual void AddRigidbodys(Transform t)
     {
         for (int i = 0; i < t.childCount; i++)
         {
@@ -89,7 +88,7 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
     }
-    private void AddTransforms(Transform t)
+    protected virtual void AddTransforms(Transform t)
     {
         for(int i = 0; i < t.childCount; i++)
         {
@@ -102,7 +101,7 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
     }
-    private void AddRenderers(Transform t)
+    protected virtual void AddRenderers(Transform t)
     {
         for (int i = 0; i < t.childCount; i++)
         {
@@ -129,7 +128,6 @@ public class EnemyBehaviour : MonoBehaviour
         if (distance <= attackDistance)//Start Attack
         {
             agent.isStopped = true;
-            moving = false;
             if(!attacking)
             {
                 Attack();
@@ -141,7 +139,6 @@ public class EnemyBehaviour : MonoBehaviour
             animator.SetBool("Walking", true);
             agent.isStopped = false;
             agent.SetDestination(player.transform.position);
-            moving = true;
             attacking = false;
         }
         if(distance > radius && !detected)//Idle
@@ -149,7 +146,6 @@ public class EnemyBehaviour : MonoBehaviour
             animator.SetBool("Walking", false);
             agent.isStopped = true;
             
-            moving = false;
             attacking = false;
 
             if (distance >= radius * 2 && !optimized)
