@@ -45,6 +45,7 @@ public class TurretBehaviour : EnemyBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dead) return;
         distance = Vector3.Distance(player.transform.position, transform.position);
         //Rotate TowardsPlayer
         Vector3 targetDirection = player.transform.position - objToRotate.transform.position;
@@ -83,5 +84,30 @@ public class TurretBehaviour : EnemyBehaviour
         Debug.Log("Shoot");
         attacking = true;
         canon.ShotBullet(player.transform.position);
+    }
+    protected override void Dead()
+    {
+        capsuleCollider.enabled = false;
+        canon.dead = true;
+        canon.enabled = false;
+        //animator.enabled = false;
+        dead = true;
+        ui.UpdateScore(200);
+
+        //SeparateChildrens();
+        foreach (BoxCollider bc in colliders)
+        {
+            bc.enabled = true;
+        }
+        foreach (Rigidbody rb in rigidBody)
+        {
+            rb.useGravity = true;
+        }
+        foreach (Transform tr in transformChilds)
+        {
+            tr.parent = null;
+        }
+        StartCoroutine(FallRest());
+        //Reconstruct();
     }
 }

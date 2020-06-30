@@ -6,6 +6,7 @@ public class Ecanon : MonoBehaviour
 {
     
     public int maxAmmo;
+    public bool dead;
     public GameObject bulletPrefab;
     public Transform ammoTransform;
     public Transform gunTransform;
@@ -21,6 +22,7 @@ public class Ecanon : MonoBehaviour
     void Start ()
     {
         CreateBullets();
+        dead = false;
     }
     void CreateBullets()
     {
@@ -41,7 +43,9 @@ public class Ecanon : MonoBehaviour
 
     public void ShotBullet(Vector3 player)
     {
-        bullets[currentBullet].ShotBullet(gunTransform.position, player - gunTransform.position);
+        if (dead) return;
+        bullets[currentBullet].Reset();
+        bullets[currentBullet].ShotBullet(gunTransform.position, player - gunTransform.position, gunTransform);
         currentBullet++;
         if(currentBullet >= maxAmmo) currentBullet = 0;
     }

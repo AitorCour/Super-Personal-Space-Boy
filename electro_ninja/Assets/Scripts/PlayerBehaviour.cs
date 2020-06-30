@@ -189,6 +189,18 @@ public class PlayerBehaviour : MonoBehaviour
                     EnemyBehaviour target = hit.transform.gameObject.GetComponent<EnemyBehaviour>();
                     target.RecieveHit();
                 }
+                else if(col != null && col.tag == "Bullet")
+                {
+                    Ebullet bullet = hit.transform.gameObject.GetComponent<Ebullet>();
+                    if(!bullet.rebooted)
+                    {
+                        //bullet.dir *= -1;
+                        bullet.rebooted = true;
+                        bullet.speed *= -10;
+                    }
+                    
+                    Debug.Log("BULLEEEEEET");
+                }
             }
         }
     }

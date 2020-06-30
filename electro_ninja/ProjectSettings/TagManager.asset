@@ -10,6 +10,7 @@ TagManager:
   - Origin
   - DynamicJoystick
   - Manager
+  - Bullet
   layers:
   - Default
   - TransparentFX

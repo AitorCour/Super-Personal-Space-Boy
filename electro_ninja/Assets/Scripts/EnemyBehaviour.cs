@@ -190,7 +190,7 @@ public class EnemyBehaviour : MonoBehaviour
             Dead();
         }
     }
-    private void Dead()
+    protected virtual void Dead()
     {
         capsuleCollider.enabled = false;
         agent.enabled = false;
@@ -220,7 +220,7 @@ public class EnemyBehaviour : MonoBehaviour
         animator.SetBool("Walking", false);
         attacking = true;
     }
-    private IEnumerator FallRest()
+    protected virtual IEnumerator FallRest()
     {
         yield return new WaitForSeconds(10);
         foreach (BoxCollider bc in colliders)
