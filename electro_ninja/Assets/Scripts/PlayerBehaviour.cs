@@ -196,7 +196,7 @@ public class PlayerBehaviour : MonoBehaviour
                     {
                         //bullet.dir *= -1;
                         bullet.rebooted = true;
-                        bullet.speed *= -10;
+                        bullet.speed *= -50;
                     }
                     
                     Debug.Log("BULLEEEEEET");
