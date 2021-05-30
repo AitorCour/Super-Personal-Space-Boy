@@ -15,7 +15,7 @@ public class EnemyDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player" && enemy.attacking)
+        if (other.tag == "Player" && enemy.attacking && !enemy.dead)
         {
             player.LoseLife();
         }

@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     // Start is called before the first frame update
     private Vector3 axis;
+    private Vector2 axis2;
     private PlayerBehaviour player;
     private UI_Manager ui;
     private GameManager gameManager;
@@ -23,17 +24,19 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         Vector3 axis = Vector3.zero;
-        if(!mobileCtrl)
+        Vector2 axis2 = Vector2.zero;
+        if (!mobileCtrl)
         {
-            axis.x = Input.GetAxis("Horizontal");
-            axis.z = Input.GetAxis("Vertical");
+            axis2.x = Input.GetAxis("Horizontal");
+            //axis.z = Input.GetAxis("Vertical");
+            axis2.y = Input.GetAxis("Vertical");
         }
         else
         {
             axis.x = joystick.Direction.x;
             axis.z = joystick.Direction.y;
         }
-        player.Move(axis);
+        player.Move(axis2);
 
         if(Input.GetButtonDown("Jump") && !ui.cooling)
         {

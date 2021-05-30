@@ -10,6 +10,7 @@ public class EnemyBehaviour : MonoBehaviour
     protected UI_Manager ui;
     protected Animator animator;
     protected CapsuleCollider capsuleCollider;
+    public LayerMask mask;
 
     public float speed;
     public float attackDistance;
@@ -17,7 +18,11 @@ public class EnemyBehaviour : MonoBehaviour
     protected float distance;
     protected float life;
 
+    public float frontFOV;
+
     public bool detected;
+    public bool sideLD;
+    private bool sideRD;
     public bool dead;
     public bool attacking;
     private bool optimized;
@@ -26,6 +31,10 @@ public class EnemyBehaviour : MonoBehaviour
     public List<Rigidbody> rigidBody;
     public List<Transform> transformChilds;
     public List<MeshRenderer> renderers;
+
+    //test
+    public Transform rotateObj;
+
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -118,12 +127,70 @@ public class EnemyBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, radius);
+        Gizmos.color = Color.red;
+        if (player != null)
+        {
+            Gizmos.DrawLine(transform.position, player.transform.position);
+            float r = frontFOV * Mathf.Deg2Rad;
+            Vector3 right = (rotateObj.transform.forward * Mathf.Cos(r) + rotateObj.transform.right * Mathf.Sin(r)).normalized;
+            Gizmos.DrawRay(rotateObj.transform.position, right * radius/4);
+
+            Gizmos.color = Color.green;
+            float l = -frontFOV * Mathf.Deg2Rad;
+            Vector3 left = (rotateObj.transform.forward * Mathf.Cos(l) + rotateObj.transform.right * Mathf.Sin(l)).normalized;
+            Gizmos.DrawRay(rotateObj.transform.position, left * radius/4);
+        }
     }
     // Update is called once per frame
     void Update()
     {
+        //Rotate TowardsPlayer
+        Vector3 targetDirection = player.transform.position - rotateObj.transform.position;
+        // The step size is equal to speed times frame time.
+        float singleStep = speed * Time.deltaTime;
+        Vector3 newDirection = Vector3.RotateTowards(rotateObj.transform.forward, targetDirection, singleStep, 0.0f);
+        rotateObj.transform.rotation = Quaternion.LookRotation(newDirection);
+
         if (dead) return;
         distance = Vector3.Distance(player.transform.position, transform.position);
+
+        float l = -frontFOV * Mathf.Deg2Rad;
+        Vector3 leftRayDir = (rotateObj.transform.forward * Mathf.Cos(l) + rotateObj.transform.right * Mathf.Sin(l)).normalized;
+        float r = frontFOV * Mathf.Deg2Rad;
+        Vector3 rightRayDir = (rotateObj.transform.forward * Mathf.Cos(r) + rotateObj.transform.right * Mathf.Sin(r)).normalized;
+
+        RaycastHit hit = new RaycastHit();
+        if (Physics.Raycast(transform.position, (player.transform.position-transform.position), out hit, radius, mask))//Set detected
+        {
+            if (hit.collider != null && hit.collider.tag == "Player" && sideLD && sideRD)
+            {
+                detected = true;
+                if (optimized) Deoptimize();
+            }
+            else detected = false;
+        }
+        if (Physics.Raycast(rotateObj.transform.position, rightRayDir, out hit, radius / 4, mask))
+        {
+            if (hit.collider != null && hit.collider.tag != "Player")
+            {
+                //Debug.Log("Ground");
+                sideRD = false;
+                Debug.Log(hit.collider.name);
+            }
+            else sideRD = true;
+        }
+        else sideRD = true;
+        if (Physics.Raycast(rotateObj.transform.position, leftRayDir, out hit, radius / 4, mask))
+        {
+            if (hit.collider != null && hit.collider.tag != "Player")
+            {
+                //Debug.Log("Ground");
+                sideLD = false;
+                Debug.Log(hit.collider.name);
+            }
+            else sideLD = true;
+        }
+        sideLD = true;
 
         if (distance <= attackDistance)//Start Attack
         {
@@ -134,14 +201,15 @@ public class EnemyBehaviour : MonoBehaviour
             }
             //DODAMAGE
         }
-        else if (distance > attackDistance && detected)//Go to player
+        else if (distance > attackDistance && detected && !attacking)//Go to player
         {
             animator.SetBool("Walking", true);
+            animator.SetBool("Attacking", false);
             agent.isStopped = false;
             agent.SetDestination(player.transform.position);
             attacking = false;
         }
-        if(distance > radius && !detected)//Idle
+        if(!detected)//Idle
         {
             animator.SetBool("Walking", false);
             agent.isStopped = true;
@@ -158,11 +226,11 @@ public class EnemyBehaviour : MonoBehaviour
                 Deoptimize();
             }
         }
-        else if(distance <= radius)//Set detected
+        /*else if(distance <= radius)//Set detected
         {
             detected = true;
             if (optimized) Deoptimize();
-        }
+        }*/
     }
     private void Optimize()
     {

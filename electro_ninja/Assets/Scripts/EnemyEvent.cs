@@ -14,5 +14,9 @@ public class EnemyEvent : MonoBehaviour
     {
         enemy.attacking = false;
     }
+    private void StartAnimation()
+    {
+        enemy.attacking = true;
+    }
     
 }

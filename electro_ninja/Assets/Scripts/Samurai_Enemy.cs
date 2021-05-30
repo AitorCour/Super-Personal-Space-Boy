@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Samurai_Enemy : EnemyBehaviour
 {
-    public LayerMask mask;
     public float acceleration;
     private Vector3 destination;
     public bool destinationAchieved;

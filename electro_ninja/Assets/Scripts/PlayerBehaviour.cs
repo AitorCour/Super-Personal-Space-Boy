@@ -12,6 +12,7 @@ public class PlayerBehaviour : MonoBehaviour
     public float speed = 10f;
     public float rayDistance;
     public float rayDistance2;
+    public float raydist;
     public float attackDistance;
     private float upForce = 1f;
 
@@ -30,6 +31,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     public List<BoxCollider> colliders;
     public List<Rigidbody> rigidBody;
+
+    public GameObject cameraDef;
     // Start is called before the first frame update
     void Start()
     {
@@ -90,7 +93,7 @@ public class PlayerBehaviour : MonoBehaviour
         //Ground
         Vector3 directionG = model.transform.TransformDirection(Vector3.down) * rayDistance2;
         Gizmos.DrawRay(model.transform.position, directionG); //forward
-        Gizmos.DrawRay(model.transform.position + new Vector3(0,0,0.4f), directionG); //forward
+        Gizmos.DrawRay(model.transform.position + new Vector3(0,0,raydist), directionG); //forward
 
         //Attack
         Gizmos.color = Color.red;
@@ -112,28 +115,61 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         if (Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || 
-            Physics.Raycast(model.transform.position + new Vector3(0, 0, -0.4f), directionG, rayDistance2, mask) ||
-            Physics.Raycast(model.transform.position + new Vector3(0, 0, 0.4f), directionG, rayDistance2, mask) ||
-            Physics.Raycast(model.transform.position + new Vector3(-0.4f, 0, 0), directionG, rayDistance2, mask) ||
-            Physics.Raycast(model.transform.position + new Vector3(0.4f, 0, 0), directionG, rayDistance2, mask))
+            Physics.Raycast(model.transform.position + new Vector3(0, 0, -raydist), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(0, 0, raydist), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(-raydist, 0, 0), directionG, rayDistance2, mask) ||
+            Physics.Raycast(model.transform.position + new Vector3(raydist, 0, 0), directionG, rayDistance2, mask))
         {
             canWalk = true;
             myRigidbody.drag = 1;
         }
-        else if (!Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0, 0, -0.4f), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0, 0, 0.4f), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(-0.4f, 0, 0), directionG, rayDistance2, mask) || !Physics.Raycast(model.transform.position + new Vector3(0.4f, 0, 0), directionG, rayDistance2, mask))
+        else if (!Physics.Raycast(model.transform.position, directionG, rayDistance2, mask) || 
+            !Physics.Raycast(model.transform.position + new Vector3(0, 0, -raydist), directionG, rayDistance2, mask) || 
+            !Physics.Raycast(model.transform.position + new Vector3(0, 0, raydist), directionG, rayDistance2, mask) || 
+            !Physics.Raycast(model.transform.position + new Vector3(raydist, 0, 0), directionG, rayDistance2, mask) || 
+            !Physics.Raycast(model.transform.position + new Vector3(raydist, 0, 0), directionG, rayDistance2, mask))
         {
             canWalk = false;
             myRigidbody.drag = 0;
         }
     }
-    public void Move(Vector3 direction)
+    public void Move(/*Vector3 direction*/Vector2 direction)
     {
+        Vector3 movement = Vector3.zero;
         if (dead) return;
         //character.Move(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
-        if(canWalk && canWalkForward)
+        if(canWalk)
         {
-            transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+            //transform.Translate(new Vector3(direction.x, 0, direction.z) * speed * Time.deltaTime);
+            //CamaraBased
+            Vector3 right = cameraDef.transform.right;
+            Vector3 forward = Vector3.Cross(right, Vector3.up);
             
+            direction = Vector3.ClampMagnitude(direction, 1f);//hace la media para diagonal de speed
+
+            /*movement += right * (direction.x * Time.deltaTime);
+            movement += forward * (direction.y * Time.deltaTime);
+            transform.Translate(movement * speed);*/
+            if(canWalkForward)
+            {
+                movement += right * (direction.x * Time.deltaTime);
+                movement += forward * (direction.y * Time.deltaTime);
+                transform.Translate(movement * speed);
+            }
+            else if (!canWalkForward)
+            {
+                if (direction.y > 0.1)
+                {
+                    //can't move
+                }
+                else if (direction.y < -0.1)
+                {
+                    movement += right * (direction.x * Time.deltaTime);
+                    movement += forward * (direction.y * Time.deltaTime);
+                    transform.Translate(movement * speed);
+                }
+            }
+            //Debug.Log("Moving");
         }
         else
         {
@@ -141,9 +177,9 @@ public class PlayerBehaviour : MonoBehaviour
         }
         //Debug.Log(direction.x);
 
-        if (direction != Vector3.zero)
+        if (movement != Vector3.zero)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(direction * -1);
+            Quaternion lookRotation = Quaternion.LookRotation(movement*-1);
             model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, lookRotation, 5);
             if (canWalk && canWalkForward)
             {
