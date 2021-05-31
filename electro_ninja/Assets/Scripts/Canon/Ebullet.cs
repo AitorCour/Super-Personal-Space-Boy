@@ -19,6 +19,7 @@ public class Ebullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         iniPos = transform.position;
+        rb.useGravity = true;
         rebooted = false;
         canDoDamage = true;
         iniSpeed = speed;
@@ -27,12 +28,17 @@ public class Ebullet : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        if(shot)
+        if (shot)
         {
             //transform.Translate(dir * speed * Time.deltaTime);
             rb.AddForce(canon.up * speed);
+            rb.useGravity = true;
         }
-        else canDoDamage = false;
+        else
+        {
+            canDoDamage = false;
+            rb.useGravity = false;
+        }
     }
 
     public virtual void ShotBullet(Vector3 origin, Vector3 direction, Transform myCanon)

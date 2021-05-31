@@ -62,11 +62,21 @@ public class TurretBehaviour : EnemyBehaviour
         // Calculate a rotation a step closer to the target and applies rotation to this object
         objToRotate.transform.rotation = Quaternion.LookRotation(newDirection);
 
-        if(distance < attackDistance && !attacking)
+        RaycastHit hit = new RaycastHit();
+        if (Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, radius, mask))//Set detected
+        {
+            if (hit.collider != null && hit.collider.tag == "Player")
+            {
+                detected = true;
+            }
+            else detected = false;
+        }
+
+        if (distance < radius && !attacking && detected)
         {
             Attack();
         }
-        else if (distance < attackDistance && attacking && !waiting)
+        else if (distance < radius && attacking && !waiting && detected)
         {
             StartCoroutine(WaitAttack());
             waiting = true;

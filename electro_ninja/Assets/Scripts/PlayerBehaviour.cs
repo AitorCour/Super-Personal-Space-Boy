@@ -147,10 +147,10 @@ public class PlayerBehaviour : MonoBehaviour
             
             direction = Vector3.ClampMagnitude(direction, 1f);//hace la media para diagonal de speed
 
-            /*movement += right * (direction.x * Time.deltaTime);
+            movement += right * (direction.x * Time.deltaTime);
             movement += forward * (direction.y * Time.deltaTime);
-            transform.Translate(movement * speed);*/
-            if(canWalkForward)
+            transform.Translate(movement * speed);
+            /*if(canWalkForward)
             {
                 movement += right * (direction.x * Time.deltaTime);
                 movement += forward * (direction.y * Time.deltaTime);
@@ -168,7 +168,7 @@ public class PlayerBehaviour : MonoBehaviour
                     movement += forward * (direction.y * Time.deltaTime);
                     transform.Translate(movement * speed);
                 }
-            }
+            }*/
             //Debug.Log("Moving");
         }
         else

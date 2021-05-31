@@ -21,7 +21,7 @@ public class EnemyBehaviour : MonoBehaviour
     public float frontFOV;
 
     public bool detected;
-    public bool sideLD;
+    private bool sideLD;
     private bool sideRD;
     public bool dead;
     public bool attacking;
