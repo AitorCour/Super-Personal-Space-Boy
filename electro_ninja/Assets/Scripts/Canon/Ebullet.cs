@@ -19,7 +19,7 @@ public class Ebullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         iniPos = transform.position;
-        rb.useGravity = true;
+        rb.useGravity = false;
         rebooted = false;
         canDoDamage = true;
         iniSpeed = speed;
@@ -32,12 +32,11 @@ public class Ebullet : MonoBehaviour
         {
             //transform.Translate(dir * speed * Time.deltaTime);
             rb.AddForce(canon.up * speed);
-            rb.useGravity = true;
+            rb.useGravity = false;
         }
         else
         {
             canDoDamage = false;
-            rb.useGravity = false;
         }
     }
 
@@ -47,7 +46,8 @@ public class Ebullet : MonoBehaviour
         transform.position = origin;
         dir = direction;
         canon = myCanon;
-        if(shotFX != null)
+        rb.useGravity = false;
+        if (shotFX != null)
         {
             shotFX.volume = Random.Range(0.75f, 0.9f);
             shotFX.pitch = Random.Range(0.9f, 1.1f);
@@ -77,15 +77,22 @@ public class Ebullet : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "Player" && !rebooted)
         {
             if (!canDoDamage) return;
             collision.gameObject.GetComponent<PlayerBehaviour>().LoseLife();
+            rb.useGravity = true;
         }
         if(collision.gameObject.tag == "Enemy")
         {
             if (!canDoDamage) return;
             collision.gameObject.GetComponent<EnemyBehaviour>().RecieveHit();
+            rb.useGravity = true;
+        }
+        if(collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Bullet")
+        {
+            canDoDamage = false;
+            rb.useGravity = true;
         }
         shot = false;
         rb.constraints = RigidbodyConstraints.None;

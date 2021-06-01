@@ -231,8 +231,10 @@ public class PlayerBehaviour : MonoBehaviour
                     if(!bullet.rebooted)
                     {
                         //bullet.dir *= -1;
+                        Transform actualPos = bullet.transform;
                         bullet.rebooted = true;
-                        bullet.speed *= -50;
+                        bullet.speed *= -5;
+                        bullet.ShotBullet(actualPos.position, bullet.dir, actualPos);
                     }
                     
                     Debug.Log("BULLEEEEEET");
