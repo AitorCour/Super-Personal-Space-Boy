@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
         ui = GameObject.FindGameObjectWithTag("UI").GetComponent<UI_Manager>();
         joystick = GameObject.FindGameObjectWithTag("DynamicJoystick").GetComponent<DynamicJoystick>();
+        gameManager = GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -43,6 +44,10 @@ public class InputManager : MonoBehaviour
             player.Attack();
             ui.StartCooldown();
             //cooldown
+        }
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            gameManager.Restart();
         }
         if(player.attacking)
         {

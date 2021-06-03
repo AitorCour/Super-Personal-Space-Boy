@@ -20,6 +20,7 @@ public class PlayerBehaviour : MonoBehaviour
     public bool canWalk;
     private bool canWalkForward;
     private bool dead;
+    public bool inmortal = false;
 
     private int life = 1;
     public int attackNum = 1;
@@ -231,10 +232,9 @@ public class PlayerBehaviour : MonoBehaviour
                     if(!bullet.rebooted)
                     {
                         //bullet.dir *= -1;
-                        Transform actualPos = bullet.transform;
                         bullet.rebooted = true;
-                        bullet.speed *= -5;
-                        bullet.ShotBullet(actualPos.position, bullet.dir, actualPos);
+                        //bullet.speed *= -1;
+                        bullet.ShotBulletToEnemy(transform.position, bullet.originalEnemy - transform.position);
                     }
                     
                     Debug.Log("BULLEEEEEET");
@@ -253,6 +253,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     private void Dead()
     {
+        if (inmortal) return;
         capsuleCollider.enabled = false;
         myRigidbody.useGravity = false;
         //agent.enabled = false;

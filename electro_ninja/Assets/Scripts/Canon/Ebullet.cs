@@ -10,6 +10,7 @@ public class Ebullet : MonoBehaviour
     public float speed = 200;
     protected Vector3 iniPos;
     public Vector3 dir;
+    public Vector3 originalEnemy;
     protected bool shot;
     public bool rebooted;
     private bool canDoDamage;
@@ -31,18 +32,22 @@ public class Ebullet : MonoBehaviour
         if (shot)
         {
             //transform.Translate(dir * speed * Time.deltaTime);
-            rb.AddForce(canon.up * speed);
+            //rb.AddForce(canon.up * speed);
+            transform.Translate(dir.normalized * speed * Time.deltaTime);
+            //rb.velocity = dir * speed* 100 * Time.deltaTime;
             rb.useGravity = false;
+            Debug.Log("Shoot_2");
         }
         else
         {
             canDoDamage = false;
         }
     }
-
+    //originalEnemy - 
     public virtual void ShotBullet(Vector3 origin, Vector3 direction, Transform myCanon)
     {
         shot = true;
+        originalEnemy = origin;
         transform.position = origin;
         dir = direction;
         canon = myCanon;
@@ -53,6 +58,20 @@ public class Ebullet : MonoBehaviour
             shotFX.pitch = Random.Range(0.9f, 1.1f);
             shotFX.Play();
         }
+    }
+    public virtual void ShotBulletToEnemy(Vector3 origin, Vector3 direction)
+    {
+        shot = true;
+        dir = direction;
+        rb.useGravity = false;
+        speed *= 2;
+        if (shotFX != null)
+        {
+            shotFX.volume = Random.Range(0.75f, 0.9f);
+            shotFX.pitch = Random.Range(0.9f, 1.1f);
+            shotFX.Play();
+        }
+        Debug.Log("Shoot_3");
     }
 
     public virtual void Reset()
@@ -95,6 +114,6 @@ public class Ebullet : MonoBehaviour
             rb.useGravity = true;
         }
         shot = false;
-        rb.constraints = RigidbodyConstraints.None;
+        //rb.constraints = RigidbodyConstraints.None;
     }
 }

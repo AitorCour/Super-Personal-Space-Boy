@@ -6,7 +6,7 @@ public class TurretBehaviour : EnemyBehaviour
 {
     public GameObject objToRotate;
     private Ecanon canon;
-    private float attackTime = 2;
+    public float attackTime = 2;
     private bool waiting;
 
     // Start is called before the first frame update

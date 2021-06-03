@@ -48,21 +48,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2561
   speed: 3
   attackDistance: 12
-  radius: 12
+  radius: 3.5
   frontFOV: 0
   detected: 0
-  sideLD: 0
   dead: 0
   attacking: 0
   colliders: []
   rigidBody: []
   transformChilds: []
   renderers: []
-  rotateObj: {fileID: 0}
+  rotateObj: {fileID: 281111612516738379}
   objToRotate: {fileID: 281111612516738378}
+  attackTime: 1
 --- !u!114 &281111612412406270
 MonoBehaviour:
   m_ObjectHideFlags: 0
