@@ -52,6 +52,7 @@ public class Ebullet : MonoBehaviour
         dir = direction;
         canon = myCanon;
         rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         if (shotFX != null)
         {
             shotFX.volume = Random.Range(0.75f, 0.9f);
@@ -64,6 +65,7 @@ public class Ebullet : MonoBehaviour
         shot = true;
         dir = direction;
         rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         speed *= 2;
         if (shotFX != null)
         {
@@ -101,17 +103,20 @@ public class Ebullet : MonoBehaviour
             if (!canDoDamage) return;
             collision.gameObject.GetComponent<PlayerBehaviour>().LoseLife();
             rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
         }
         if(collision.gameObject.tag == "Enemy")
         {
             if (!canDoDamage) return;
             collision.gameObject.GetComponent<EnemyBehaviour>().RecieveHit();
             rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
         }
-        if(collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Bullet")
+        if(collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "Untagged")
         {
             canDoDamage = false;
             rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
         }
         shot = false;
         //rb.constraints = RigidbodyConstraints.None;
